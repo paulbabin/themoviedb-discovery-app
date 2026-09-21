@@ -16,14 +16,15 @@ export default function App() {
   return (
     <div>
       <h1>Popular Movies</h1>
-
       {movies ? (
         <ul>
           {movies.map((movie) => (
             <MovieItem key={movie.id} movie={movie} />
           ))}
         </ul>
-      ) : null}
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   )
 }
