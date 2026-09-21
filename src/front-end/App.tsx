@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import type { Movie } from "../back-end/schemas/MoviesTypes"
+import MovieItem from "./components/MovieItem"
 
 export default function App() {
   const [movies, setMovies] = useState<Movie[] | null>(null)
@@ -15,7 +16,15 @@ export default function App() {
   return (
     <div>
       <h1>Popular Movies</h1>
+
       {movies ? (
+        <ul>
+          {movies.map((movie) => (
+            <MovieItem key={movie.id} movie={movie} />
+          ))}
+        </ul>
+      ) : null}
+      {/* {movies ? (
         <ul>
           {movies.map((movie) => (
             <li key={movie.id}>
@@ -26,7 +35,7 @@ export default function App() {
             </li>
           ))}
         </ul>
-      ) : null}
+      ) : null} */}
     </div>
   )
 }
