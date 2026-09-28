@@ -16,7 +16,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "vitest run",
+    "test": "vitest run --coverage",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:client": "vite",
     "dev:server": "tsx watch src/back-end/index.ts",
@@ -40,6 +40,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.1",
+    "@vitest/coverage-v8": "^5.0.2",
     "concurrently": "^10.0.5",
     "devmoji": "^2.3.0",
     "husky": "^9.1.7",
