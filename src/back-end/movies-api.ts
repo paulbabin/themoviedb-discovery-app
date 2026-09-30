@@ -91,7 +91,7 @@ export function registerMoviesApiID(app: Express): void {
         if (!response.ok) {
           res
             .status(response.status === 404 ? 404 : 500)
-            .json({ error: 'Movie not found' });
+            .json({ error: 'Movie not found with id:' + id });
           return;
         }
 
@@ -100,7 +100,7 @@ export function registerMoviesApiID(app: Express): void {
         res.json(toSupportedMovie(rawData));
       } catch (error) {
         console.error('Error fetching movie:', error);
-        res.status(500).json({ error: 'Failed to fetch movie' });
+        res.status(500).json({ error: 'Failed to fetch movie ID:' + id });
       }
     },
   );
