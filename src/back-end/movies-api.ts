@@ -2,9 +2,10 @@ import { tmdbAccessToken } from './config';
 import { DEFAULT_LANGUAGE, DEFAULT_PAGE, DEFAULT_REGION } from './constants';
 import type {
   MoviesApiResponse,
+  TmdbMovieDetails,
   TmdbMoviesRawResponse,
 } from './schemas/MoviesTypes';
-import { toSupportedMovie } from './utils';
+import { toSupportedMovie, toSupportedMovieDetails } from './utils';
 import type { Express } from 'express';
 import express from 'express';
 
@@ -66,9 +67,9 @@ export function registerMoviesApiID(app: Express): void {
   app.get(
     '/api/movies/:id',
     async (_req: express.Request, res: express.Response) => {
-      const { id } = _req.params;
+      const id = _req.params.id;
 
-      if (!id) {
+      if (typeof id !== 'string' || !id) {
         res.status(400).json({ error: 'Movie id is required' });
         return;
       }
@@ -95,9 +96,8 @@ export function registerMoviesApiID(app: Express): void {
           return;
         }
 
-        const rawData =
-          (await response.json()) as TmdbMoviesRawResponse['results'][number];
-        res.json(toSupportedMovie(rawData));
+        const rawData = (await response.json()) as TmdbMovieDetails;
+        res.json(toSupportedMovieDetails(rawData));
       } catch (error) {
         console.error('Error fetching movie:', error);
         res.status(500).json({ error: 'Failed to fetch movie ID:' + id });
