@@ -1,0 +1,33 @@
+.about-page {
+  width: min(960px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 40px 0 56px;
+  color: #1c2238;
+}
+
+.about-page h1 {
+  margin: 0 0 20px;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.1;
+}
+
+.about-page p {
+  max-width: 68ch;
+  margin: 0 0 16px;
+  color: #455576;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.about-page a {
+  color: #176b78;
+  text-underline-offset: 3px;
+}
+
+.about-page a:hover {
+  color: #104b58;
+}
+
+.about-page a:focus-visible {
+  border-radius: 2px;
+}
