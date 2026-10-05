@@ -18,7 +18,6 @@ export default function NavBar() {
             <NavLink
               className="navbar__link"
               to="/movies"
-              end
               style={({ isActive }) => ({
                 color: '#fff',
                 fontWeight: 700,
