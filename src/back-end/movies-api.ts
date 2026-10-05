@@ -2,9 +2,10 @@ import { tmdbAccessToken } from './config';
 import { DEFAULT_LANGUAGE, DEFAULT_PAGE, DEFAULT_REGION } from './constants';
 import type {
   MoviesApiResponse,
+  TmdbMovieDetails,
   TmdbMoviesRawResponse,
 } from './schemas/MoviesTypes';
-import { toSupportedMovie } from './utils';
+import { toSupportedMovie, toSupportedMovieDetails } from './utils';
 import type { Express } from 'express';
 import express from 'express';
 
@@ -57,6 +58,49 @@ export function registerMoviesApi(app: Express): void {
       } catch (error) {
         console.error('Error fetching popular movies:', error);
         res.status(500).json({ error: 'Failed to fetch popular movies' });
+      }
+    },
+  );
+}
+
+export function registerMoviesApiID(app: Express): void {
+  app.get(
+    '/api/movies/:id',
+    async (_req: express.Request, res: express.Response) => {
+      const id = _req.params.id;
+
+      if (typeof id !== 'string' || !id) {
+        res.status(400).json({ error: 'Movie id is required' });
+        return;
+      }
+
+      const queryParams = new URLSearchParams();
+      const { language } = _req.query;
+      queryParams.append('language', (language as string) || DEFAULT_LANGUAGE);
+
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/${encodeURIComponent(id)}?${queryParams.toString()}`,
+          {
+            headers: {
+              Authorization: `Bearer ${tmdbAccessToken}`,
+              'Content-Type': 'application/json;charset=utf-8',
+            },
+          },
+        );
+
+        if (!response.ok) {
+          res
+            .status(response.status === 404 ? 404 : 500)
+            .json({ error: 'Movie not found with id:' + id });
+          return;
+        }
+
+        const rawData = (await response.json()) as TmdbMovieDetails;
+        res.json(toSupportedMovieDetails(rawData));
+      } catch (error) {
+        console.error('Error fetching movie:', error);
+        res.status(500).json({ error: 'Failed to fetch movie ID:' + id });
       }
     },
   );
