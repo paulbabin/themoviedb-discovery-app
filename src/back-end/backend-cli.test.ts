@@ -14,7 +14,7 @@ vi.mock('./database/schema.ts', () => ({
   getDatabase: getDatabaseMock,
 }));
 
-vi.mock('./database/genres.ts', () => ({
+vi.mock('./database/genre-repository.ts', () => ({
   DEFAULT_GENRES_CSV_PATH: '/tmp/genres.csv',
   syncGenresFromCsv: syncGenresFromCsvMock,
 }));

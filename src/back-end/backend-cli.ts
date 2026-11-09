@@ -5,7 +5,7 @@ import { DEFAULT_DATABASE_PATH, getDatabase } from './database/schema.ts';
 import {
   DEFAULT_GENRES_CSV_PATH,
   syncGenresFromCsv,
-} from './database/genres.ts';
+} from './database/genre-repository.ts';
 
 /** Command-line interface for movie database operations. */
 const program = new Command().description('CLI for movie database operations');

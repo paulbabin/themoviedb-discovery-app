@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import {
   findGenreById,
   listGenres,
+  parseGenresCsv,
+  syncGenresFromCsv,
   upsertGenres,
   type Genre,
 } from './genre-repository';
@@ -89,6 +91,37 @@ describe('genre repository', () => {
       upsertGenres(database, [{ id: 18, name: null as unknown as string }]),
     ).toThrow(/NOT NULL constraint failed/);
     expect(listGenres(database)).toEqual([]);
+    database.close();
+  });
+
+  it('parses the genre CSV format', () => {
+    expect(parseGenresCsv('id,name\n28,Action\n18,Drama\n')).toEqual([
+      { id: 28, name: 'Action' },
+      { id: 18, name: 'Drama' },
+    ]);
+  });
+
+  it('rejects malformed or duplicate CSV entries', () => {
+    expect(() => parseGenresCsv('name,id\n28,Action')).toThrow(
+      /"id,name" header/,
+    );
+    expect(() => parseGenresCsv('id,name\n0,Action')).toThrow(
+      /Invalid genre id/,
+    );
+    expect(() => parseGenresCsv('id,name\n28,Action,Extra')).toThrow(
+      /Invalid genres CSV line/,
+    );
+    expect(() => parseGenresCsv('id,name\n28,')).toThrow(/cannot be empty/);
+    expect(() => parseGenresCsv('id,name\n28,Action\n28,Drama')).toThrow(
+      /Duplicate genre id/,
+    );
+  });
+
+  it('loads genres from a CSV file into the database', () => {
+    const database = createDatabase();
+
+    expect(syncGenresFromCsv(database, 'data/genres.csv')).toBe(19);
+    expect(listGenres(database)).toHaveLength(19);
     database.close();
   });
 });
