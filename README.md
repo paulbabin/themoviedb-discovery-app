@@ -60,6 +60,28 @@ npx tsx src/back-end/backend-cli.ts create-database --path ./data/ma-base.sqlite
 
 La commande initialise le schéma sans supprimer les données d'une base existante.
 
+Pour créer ou mettre à jour les genres depuis le fichier [`data/genres.csv`](./data/genres.csv), utilisez :
+
+```sh
+npx tsx src/back-end/backend-cli.ts update-genres
+```
+
+La synchronisation est idempotente : les genres existants sont mis à jour par identifiant,
+les nouveaux genres sont ajoutés et les autres données de la base sont conservées. Les
+options `--path` et `--file` permettent de personnaliser respectivement la base SQLite et
+le fichier CSV source :
+
+```sh
+npx tsx src/back-end/backend-cli.ts update-genres \
+  --path ./data/ma-base.sqlite \
+  --file ./data/mes-genres.csv
+```
+
+Les opérations de lecture et d'écriture sur les genres sont regroupées dans
+[`src/back-end/database/genre-repository.ts`](./src/back-end/database/genre-repository.ts).
+Le dépôt permet de rechercher un genre par identifiant, de lister les genres par identifiant
+croissant et d'insérer ou mettre à jour un itérable de genres.
+
 ## API locale
 
 | Méthode | Route                 | Description                                                       |

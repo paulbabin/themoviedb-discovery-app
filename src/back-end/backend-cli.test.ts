@@ -7,10 +7,16 @@ const closeMock = vi.fn();
 const getDatabaseMock = vi.fn(() => ({
   close: closeMock,
 }));
+const syncGenresFromCsvMock = vi.fn(() => 19);
 
 vi.mock('./database/schema.ts', () => ({
   DEFAULT_DATABASE_PATH,
   getDatabase: getDatabaseMock,
+}));
+
+vi.mock('./database/genre-repository.ts', () => ({
+  DEFAULT_GENRES_CSV_PATH: '/tmp/genres.csv',
+  syncGenresFromCsv: syncGenresFromCsvMock,
 }));
 
 /**
@@ -63,6 +69,51 @@ describe('backend-cli.ts', () => {
       } finally {
         logSpy.mockRestore();
       }
+    });
+  });
+
+  describe('update-genres', () => {
+    it('uses the default database and CSV paths', async () => {
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+      try {
+        await runCliWithArgs(['update-genres']);
+
+        expect(getDatabaseMock).toHaveBeenCalledWith(DEFAULT_DATABASE_PATH);
+        expect(syncGenresFromCsvMock).toHaveBeenCalledWith(
+          expect.objectContaining({ close: closeMock }),
+          '/tmp/genres.csv',
+        );
+        expect(closeMock).toHaveBeenCalledOnce();
+        expect(logSpy).toHaveBeenCalledWith(
+          `19 genre(s) created or updated in ${resolve(DEFAULT_DATABASE_PATH)}`,
+        );
+      } finally {
+        logSpy.mockRestore();
+      }
+    });
+
+    it('uses custom database and CSV paths and closes the database on failure', async () => {
+      const customDatabasePath = './data/custom-movies.sqlite';
+      const customCsvPath = './data/custom-genres.csv';
+      syncGenresFromCsvMock.mockImplementationOnce(() => {
+        throw new Error('Invalid genres CSV');
+      });
+
+      await expect(
+        runCliWithArgs([
+          'create-genres',
+          '--path',
+          customDatabasePath,
+          '--file',
+          customCsvPath,
+        ]),
+      ).rejects.toThrow('Invalid genres CSV');
+      expect(getDatabaseMock).toHaveBeenCalledWith(customDatabasePath);
+      expect(syncGenresFromCsvMock).toHaveBeenCalledWith(
+        expect.objectContaining({ close: closeMock }),
+        customCsvPath,
+      );
+      expect(closeMock).toHaveBeenCalledOnce();
     });
   });
 });
