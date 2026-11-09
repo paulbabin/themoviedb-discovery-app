@@ -1,11 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { DatabaseSync } from 'node:sqlite';
+import { upsertGenres, type Genre } from './genre-repository';
 
-export type Genre = {
-  id: number;
-  name: string;
-};
+export { upsertGenres } from './genre-repository';
 
 export const DEFAULT_GENRES_CSV_PATH = resolve('data/genres.csv');
 
@@ -47,27 +45,6 @@ export function parseGenresCsv(csv: string): Genre[] {
   }
 
   return genres;
-}
-
-export function upsertGenres(database: DatabaseSync, genres: Genre[]): number {
-  const statement = database.prepare(`
-    INSERT INTO genres (id, name)
-    VALUES (?, ?)
-    ON CONFLICT(id) DO UPDATE SET name = excluded.name
-  `);
-
-  database.exec('BEGIN TRANSACTION;');
-  try {
-    for (const genre of genres) {
-      statement.run(genre.id, genre.name);
-    }
-    database.exec('COMMIT;');
-  } catch (error) {
-    database.exec('ROLLBACK;');
-    throw error;
-  }
-
-  return genres.length;
 }
 
 export function syncGenresFromCsv(
