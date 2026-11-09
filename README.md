@@ -77,6 +77,11 @@ npx tsx src/back-end/backend-cli.ts update-genres \
   --file ./data/mes-genres.csv
 ```
 
+Les opérations de lecture et d'écriture sur les genres sont regroupées dans
+[`src/back-end/database/genre-repository.ts`](./src/back-end/database/genre-repository.ts).
+Le dépôt permet de rechercher un genre par identifiant, de lister les genres par identifiant
+croissant et d'insérer ou mettre à jour un itérable de genres.
+
 ## API locale
 
 | Méthode | Route                 | Description                                                       |
