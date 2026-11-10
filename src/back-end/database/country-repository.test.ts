@@ -4,8 +4,8 @@ import {
   findCountryByCode,
   listCountries,
   upsertCountries,
-  type Country,
 } from './country-repository';
+import type { Country } from '../types/Country';
 
 function createDatabase(): DatabaseSync {
   const database = new DatabaseSync(':memory:');

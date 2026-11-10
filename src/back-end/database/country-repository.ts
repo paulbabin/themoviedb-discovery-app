@@ -1,9 +1,5 @@
 import type { DatabaseSync } from 'node:sqlite';
-
-export type Country = {
-  code: string;
-  name: string;
-};
+import type { Country } from '../types/Country';
 
 export function findCountryByCode(
   database: DatabaseSync,
