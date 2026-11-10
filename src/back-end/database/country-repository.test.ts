@@ -111,4 +111,22 @@ describe('country repository', () => {
     expect(listCountries(database)).toEqual([{ code: 'FR', name: 'France' }]);
     database.close();
   });
+
+  it('rolls back all changes when a country cannot be stored', () => {
+    // Arrange
+    const database = createDatabase();
+    const countries = [
+      { code: 'FR', name: 'France' },
+      { code: 'GB', name: null as unknown as string },
+    ];
+
+    // Act
+    expect(() => upsertCountries(database, countries)).toThrow(
+      /NOT NULL constraint failed/,
+    );
+
+    // Assert
+    expect(listCountries(database)).toEqual([]);
+    database.close();
+  });
 });
