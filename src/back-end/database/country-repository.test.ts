@@ -1,6 +1,7 @@
 import { DatabaseSync } from 'node:sqlite';
 import { describe, expect, it } from 'vitest';
 import {
+  deleteUnusedCountries,
   findCountryByCode,
   listCountries,
   upsertCountries,
@@ -127,6 +128,32 @@ describe('country repository', () => {
 
     // Assert
     expect(listCountries(database)).toEqual([]);
+    database.close();
+  });
+
+  it('deletes only countries that are not associated with a movie', () => {
+    // Arrange
+    const database = createDatabase();
+    database.exec(`
+      CREATE TABLE production_countries (
+        movie_id INTEGER NOT NULL,
+        country_code TEXT NOT NULL
+      );
+    `);
+    database.prepare('INSERT INTO countries VALUES (?, ?)').run('FR', 'France');
+    database
+      .prepare('INSERT INTO countries VALUES (?, ?)')
+      .run('GB', 'United Kingdom');
+    database
+      .prepare('INSERT INTO production_countries VALUES (?, ?)')
+      .run(1, 'FR');
+
+    // Act
+    const count = deleteUnusedCountries(database);
+
+    // Assert
+    expect(count).toBe(1);
+    expect(listCountries(database)).toEqual([{ code: 'FR', name: 'France' }]);
     database.close();
   });
 });

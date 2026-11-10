@@ -44,3 +44,18 @@ export function upsertCountries(
 
   return entries.length;
 }
+
+export function deleteUnusedCountries(database: DatabaseSync): number {
+  const result = database
+    .prepare(`
+      DELETE FROM countries
+      WHERE NOT EXISTS (
+        SELECT 1
+        FROM production_countries
+        WHERE production_countries.country_code = countries.code
+      )
+    `)
+    .run();
+
+  return Number(result.changes);
+}
