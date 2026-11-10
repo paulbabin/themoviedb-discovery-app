@@ -113,6 +113,7 @@ describe('genre repository', () => {
     expect(() => parseGenresCsv('name,slug\n28,Action')).toThrow(
       /headers must be exactly/,
     );
+    expect(() => parseGenresCsv('')).toThrow(/headers must be exactly/);
     expect(() => parseGenresCsv('id,id\n28,Action')).toThrow(
       /headers must be exactly/,
     );

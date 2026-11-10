@@ -63,6 +63,10 @@ function parseGenreId(value: string, lineNumber: number): number {
 }
 
 export function parseGenresCsv(csv: string): Genre[] {
+  if (csv.trim().length === 0) {
+    throw new Error('Genres CSV headers must be exactly "id" and "name".');
+  }
+
   let records: Array<Record<string, string>>;
   try {
     records = parse(csv, {
