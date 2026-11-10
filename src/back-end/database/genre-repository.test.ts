@@ -1,6 +1,7 @@
 import { DatabaseSync } from 'node:sqlite';
 import { describe, expect, it } from 'vitest';
 import {
+  cleanUnusedGenres,
   findGenreById,
   listGenres,
   parseGenresCsv,
@@ -95,25 +96,36 @@ describe('genre repository', () => {
   });
 
   it('parses the genre CSV format', () => {
-    expect(parseGenresCsv('id,name\n28,Action\n18,Drama\n')).toEqual([
+    expect(
+      parseGenresCsv(
+        '\uFEFFNAME,ID\r\n"Science, Fiction",878\r\n"Drama ""classic""",18\r\n',
+      ),
+    ).toEqual([
+      { id: 878, name: 'Science, Fiction' },
+      { id: 18, name: 'Drama "classic"' },
+    ]);
+    expect(parseGenresCsv('id,name\n\n28,Action\n\n')).toEqual([
       { id: 28, name: 'Action' },
-      { id: 18, name: 'Drama' },
     ]);
   });
 
   it('rejects malformed or duplicate CSV entries', () => {
-    expect(() => parseGenresCsv('name,id\n28,Action')).toThrow(
-      /"id,name" header/,
+    expect(() => parseGenresCsv('name,slug\n28,Action')).toThrow(
+      /headers must be exactly/,
+    );
+    expect(() => parseGenresCsv('id,id\n28,Action')).toThrow(
+      /headers must be exactly/,
     );
     expect(() => parseGenresCsv('id,name\n0,Action')).toThrow(
       /Invalid genre id/,
     );
-    expect(() => parseGenresCsv('id,name\n28,Action,Extra')).toThrow(
-      /Invalid genres CSV line/,
-    );
+    expect(() => parseGenresCsv('id,name\n28')).toThrow(/Invalid genres CSV/);
     expect(() => parseGenresCsv('id,name\n28,')).toThrow(/cannot be empty/);
     expect(() => parseGenresCsv('id,name\n28,Action\n28,Drama')).toThrow(
       /Duplicate genre id/,
+    );
+    expect(() => parseGenresCsv('id,name\n1,"unterminated')).toThrow(
+      /Invalid genres CSV/,
     );
   });
 
@@ -122,6 +134,26 @@ describe('genre repository', () => {
 
     expect(syncGenresFromCsv(database, 'data/genres.csv')).toBe(19);
     expect(listGenres(database)).toHaveLength(19);
+    database.close();
+  });
+
+  it('removes only genres that are not associated with a movie', () => {
+    const database = createDatabase();
+    database.exec(`
+      CREATE TABLE movies (id INTEGER PRIMARY KEY);
+      CREATE TABLE movie_genres (
+        movie_id INTEGER NOT NULL,
+        genre_id INTEGER NOT NULL
+      );
+    `);
+    database
+      .prepare('INSERT INTO genres VALUES (?, ?), (?, ?)')
+      .run(18, 'Drama', 28, 'Action');
+    database.prepare('INSERT INTO movies VALUES (?)').run(1);
+    database.prepare('INSERT INTO movie_genres VALUES (?, ?)').run(1, 18);
+
+    expect(cleanUnusedGenres(database)).toBe(1);
+    expect(listGenres(database)).toEqual([{ id: 18, name: 'Drama' }]);
     database.close();
   });
 });

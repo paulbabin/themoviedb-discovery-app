@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { DatabaseSync } from 'node:sqlite';
+import { parse } from 'csv-parse/sync';
 
 export type Genre = {
   id: number;
@@ -62,23 +63,45 @@ function parseGenreId(value: string, lineNumber: number): number {
 }
 
 export function parseGenresCsv(csv: string): Genre[] {
-  const lines = csv.split(/\r?\n/).filter((line) => line.trim().length > 0);
-  if (lines.length === 0 || lines[0] !== 'id,name') {
-    throw new Error('Genres CSV must start with the "id,name" header.');
+  let records: Array<Record<string, string>>;
+  try {
+    records = parse(csv, {
+      bom: true,
+      columns: (headers: string[]) => {
+        const normalizedHeaders = headers.map((header) =>
+          header.trim().toLowerCase(),
+        );
+        if (
+          normalizedHeaders.length !== 2 ||
+          !normalizedHeaders.includes('id') ||
+          !normalizedHeaders.includes('name')
+        ) {
+          throw new Error(
+            'Genres CSV headers must be exactly "id" and "name".',
+          );
+        }
+        return normalizedHeaders;
+      },
+      skip_empty_lines: true,
+      trim: true,
+    }) as Array<Record<string, string>>;
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith('Genres CSV')) {
+      throw error;
+    }
+    throw new Error(
+      `Invalid genres CSV: ${error instanceof Error ? error.message : String(error)}`,
+      { cause: error },
+    );
   }
 
   const genres: Genre[] = [];
   const ids = new Set<number>();
 
-  for (const [index, line] of lines.slice(1).entries()) {
+  for (const [index, record] of records.entries()) {
     const lineNumber = index + 2;
-    const fields = line.split(',');
-    if (fields.length !== 2) {
-      throw new Error(`Invalid genres CSV line ${lineNumber}: "${line}"`);
-    }
-
-    const id = parseGenreId(fields[0].trim(), lineNumber);
-    const name = fields[1].trim();
+    const id = parseGenreId(record.id, lineNumber);
+    const name = record.name;
     if (name.length === 0) {
       throw new Error(`Genre name cannot be empty on CSV line ${lineNumber}.`);
     }
@@ -97,5 +120,23 @@ export function syncGenresFromCsv(
   database: DatabaseSync,
   csvPath = DEFAULT_GENRES_CSV_PATH,
 ): number {
-  return upsertGenres(database, parseGenresCsv(readFileSync(csvPath, 'utf8')));
+  return upsertGenres(database, readGenresCsv(csvPath));
+}
+
+export function readGenresCsv(csvPath: string): Genre[] {
+  return parseGenresCsv(readFileSync(csvPath, 'utf8'));
+}
+
+export function cleanUnusedGenres(database: DatabaseSync): number {
+  const result = database
+    .prepare(`
+      DELETE FROM genres
+      WHERE NOT EXISTS (
+        SELECT 1
+        FROM movie_genres
+        WHERE movie_genres.genre_id = genres.id
+      )
+    `)
+    .run();
+  return Number(result.changes);
 }
