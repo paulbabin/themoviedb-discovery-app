@@ -93,10 +93,7 @@ export function parseGenresCsv(csv: string): Genre[] {
     if (error instanceof Error && error.message.startsWith('Genres CSV')) {
       throw error;
     }
-    throw new Error(
-      `Invalid genres CSV: ${error instanceof Error ? error.message : String(error)}`,
-      { cause: error },
-    );
+    throw new Error(`Invalid genres CSV: ${String(error)}`, { cause: error });
   }
 
   const genres: Genre[] = [];
