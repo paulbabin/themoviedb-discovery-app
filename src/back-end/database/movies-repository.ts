@@ -79,7 +79,7 @@ export function createMovie(
   movie: MovieInput,
 ): MovieRecord {
   const collectedAt = movie.collected_at ?? new Date().toISOString();
-  database
+  const row = database
     .prepare(
       `INSERT INTO movies (
         id,
@@ -97,9 +97,10 @@ export function createMovie(
         budget,
         revenue,
         collected_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      RETURNING ${movieColumns}`,
     )
-    .run(
+    .get(
       movie.id,
       movie.title,
       movie.original_title,
@@ -117,11 +118,7 @@ export function createMovie(
       collectedAt,
     );
 
-  const createdMovie = findMovieById(database, movie.id);
-  if (!createdMovie) {
-    throw new Error(`Movie ${movie.id} was not created`);
-  }
-  return createdMovie;
+  return toMovieRecord(row as Record<string, unknown>);
 }
 
 /**

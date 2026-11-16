@@ -67,6 +67,14 @@ describe('movies repository', () => {
     expect(movies.map((movie) => movie.id)).toEqual([10, 30]);
   });
 
+  it('returns undefined when a movie does not exist', () => {
+    // Act
+    const movie = findMovieById(database, 404);
+
+    // Assert
+    expect(movie).toBeUndefined();
+  });
+
   it('updates an existing movie and recalculates its generated release year', () => {
     // Arrange
     createMovie(database, baseMovie);
@@ -94,6 +102,21 @@ describe('movies repository', () => {
 
     // Assert
     expect(wasUpdated).toBe(false);
+  });
+
+  it('generates the collection timestamp when it is omitted during an update', () => {
+    // Arrange
+    createMovie(database, baseMovie);
+    const { collected_at: _collectedAt, ...movieWithoutTimestamp } = baseMovie;
+
+    // Act
+    const wasUpdated = updateMovie(database, movieWithoutTimestamp);
+
+    // Assert
+    expect(wasUpdated).toBe(true);
+    expect(findMovieById(database, baseMovie.id)?.collected_at).toEqual(
+      expect.any(String),
+    );
   });
 
   it('generates the collection timestamp when it is omitted', () => {
