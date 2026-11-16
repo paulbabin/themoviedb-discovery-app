@@ -1,27 +1,5 @@
 import type { DatabaseSync } from 'node:sqlite';
-
-export type MovieRecord = {
-  id: number;
-  title: string;
-  original_title: string;
-  original_language: string;
-  overview: string;
-  release_date: string | null;
-  release_year: number | null;
-  popularity: number | null;
-  vote_average: number | null;
-  vote_count: number | null;
-  poster_path: string | null;
-  backdrop_path: string | null;
-  runtime_minutes: number | null;
-  budget: number | null;
-  revenue: number | null;
-  collected_at: string;
-};
-
-export type MovieInput = Omit<MovieRecord, 'release_year' | 'collected_at'> & {
-  collected_at?: string;
-};
+import type { MovieInput, MovieRecord } from '../types/MoviesTypes';
 
 const movieColumns = `
   id,

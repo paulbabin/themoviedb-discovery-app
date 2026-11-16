@@ -1,12 +1,12 @@
 import { DatabaseSync } from 'node:sqlite';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { initializeSchema } from './schema';
+import type { MovieInput } from '../types/MoviesTypes';
 import {
   createMovie,
   findMovieById,
   listMovies,
   updateMovie,
-  type MovieInput,
 } from './movies-repository';
 
 const baseMovie: MovieInput = {
