@@ -111,6 +111,15 @@ export type MovieImportResult = {
   updated: number;
 };
 
+export type MovieUpdateResult = {
+  movies: {
+    created: number;
+    updated: number;
+  };
+  genres: number;
+  countries: number;
+};
+
 // Type for a movie persisted in the SQLite database.
 export type MovieRecord = {
   id: number;
