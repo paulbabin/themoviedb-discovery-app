@@ -7,7 +7,12 @@ const closeMock = vi.fn();
 const getDatabaseMock = vi.fn(() => ({
   close: closeMock,
 }));
-const syncGenresFromCsvMock = vi.fn(() => 19);
+const readGenresCsvMock = vi.fn(() => [
+  { id: 18, name: 'Drama' },
+  { id: 28, name: 'Action' },
+]);
+const upsertGenresMock = vi.fn(() => 2);
+const cleanUnusedGenresMock = vi.fn(() => 1);
 
 vi.mock('./database/schema.ts', () => ({
   DEFAULT_DATABASE_PATH,
@@ -15,8 +20,9 @@ vi.mock('./database/schema.ts', () => ({
 }));
 
 vi.mock('./database/genre-repository.ts', () => ({
-  DEFAULT_GENRES_CSV_PATH: '/tmp/genres.csv',
-  syncGenresFromCsv: syncGenresFromCsvMock,
+  readGenresCsv: readGenresCsvMock,
+  upsertGenres: upsertGenresMock,
+  cleanUnusedGenres: cleanUnusedGenresMock,
 }));
 
 /**
@@ -72,48 +78,92 @@ describe('backend-cli.ts', () => {
     });
   });
 
-  describe('update-genres', () => {
-    it('uses the default database and CSV paths', async () => {
+  describe('add-genres', () => {
+    it('validates the CSV before opening the default database', async () => {
       const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
       try {
-        await runCliWithArgs(['update-genres']);
+        await runCliWithArgs(['add-genres', '/tmp/genres.csv']);
 
         expect(getDatabaseMock).toHaveBeenCalledWith(DEFAULT_DATABASE_PATH);
-        expect(syncGenresFromCsvMock).toHaveBeenCalledWith(
+        expect(readGenresCsvMock).toHaveBeenCalledWith('/tmp/genres.csv');
+        expect(upsertGenresMock).toHaveBeenCalledWith(
           expect.objectContaining({ close: closeMock }),
-          '/tmp/genres.csv',
+          [
+            { id: 18, name: 'Drama' },
+            { id: 28, name: 'Action' },
+          ],
         );
         expect(closeMock).toHaveBeenCalledOnce();
         expect(logSpy).toHaveBeenCalledWith(
-          `19 genre(s) created or updated in ${resolve(DEFAULT_DATABASE_PATH)}`,
+          `2 genre(s) imported in ${resolve(DEFAULT_DATABASE_PATH)}`,
         );
       } finally {
         logSpy.mockRestore();
       }
     });
 
-    it('uses custom database and CSV paths and closes the database on failure', async () => {
+    it('uses custom database path and closes the database on failure', async () => {
       const customDatabasePath = './data/custom-movies.sqlite';
-      const customCsvPath = './data/custom-genres.csv';
-      syncGenresFromCsvMock.mockImplementationOnce(() => {
+      upsertGenresMock.mockImplementationOnce(() => {
         throw new Error('Invalid genres CSV');
       });
 
       await expect(
         runCliWithArgs([
-          'create-genres',
           '--path',
           customDatabasePath,
-          '--file',
-          customCsvPath,
+          'add-genres',
+          './data/custom-genres.csv',
         ]),
       ).rejects.toThrow('Invalid genres CSV');
       expect(getDatabaseMock).toHaveBeenCalledWith(customDatabasePath);
-      expect(syncGenresFromCsvMock).toHaveBeenCalledWith(
+      expect(upsertGenresMock).toHaveBeenCalledWith(
         expect.objectContaining({ close: closeMock }),
-        customCsvPath,
+        expect.any(Array),
       );
       expect(closeMock).toHaveBeenCalledOnce();
+    });
+
+    it('propagates CSV validation errors before opening the database', async () => {
+      readGenresCsvMock.mockImplementationOnce(() => {
+        throw new Error('Invalid genres CSV');
+      });
+
+      await expect(
+        runCliWithArgs([
+          '--path',
+          './data/custom-movies.sqlite',
+          'add-genres',
+          './data/custom-genres.csv',
+        ]),
+      ).rejects.toThrow('Invalid genres CSV');
+      expect(getDatabaseMock).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('clean-genres', () => {
+    it('removes unused genres and reports the count and database path', async () => {
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+      try {
+        await runCliWithArgs([
+          'clean-genres',
+          '--path',
+          './data/custom-movies.sqlite',
+        ]);
+
+        expect(getDatabaseMock).toHaveBeenCalledWith(
+          './data/custom-movies.sqlite',
+        );
+        expect(cleanUnusedGenresMock).toHaveBeenCalledWith(
+          expect.objectContaining({ close: closeMock }),
+        );
+        expect(closeMock).toHaveBeenCalledOnce();
+        expect(logSpy).toHaveBeenCalledWith(
+          `1 genre(s) removed from ${resolve('./data/custom-movies.sqlite')}`,
+        );
+      } finally {
+        logSpy.mockRestore();
+      }
     });
   });
 });
