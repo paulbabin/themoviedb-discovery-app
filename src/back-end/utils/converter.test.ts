@@ -24,6 +24,7 @@ const mockTmdbMovie: TmdbMovie = {
 const mockTmdbMovieDetails: TmdbMovieDetails = {
   adult: false,
   backdrop_path: '/path/to/backdrop.jpg',
+  budget: 100000000,
   genres: [
     { id: 28, name: 'Action' },
     { id: 12, name: 'Adventure' },
@@ -37,7 +38,12 @@ const mockTmdbMovieDetails: TmdbMovieDetails = {
   production_companies: [
     { id: 1, name: 'Company 1', logo_path: null, origin_country: 'US' },
   ],
+  production_countries: [
+    { iso_3166_1: 'US', name: 'United States of America' },
+  ],
   release_date: '2023-01-01',
+  revenue: 200000000,
+  runtime: 120,
   tagline: 'This is a tagline.',
   title: 'Title',
   video: false,
