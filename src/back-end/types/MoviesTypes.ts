@@ -73,26 +73,27 @@ export type ApiErrorResponse = {
 // Type for a row read from the movies CSV file before conversion.
 export type MovieCsvRow = {
   id: string;
+// Type for a movie persisted in the SQLite database.
+export type MovieRecord = {
+  id: number;
   title: string;
   original_title: string;
   original_language: string;
   overview: string;
-  release_date: string;
-  popularity: string;
-  vote_average: string;
-  vote_count: string;
-  poster_path: string;
-  backdrop_path: string;
-  runtime: string;
-  budget: string;
-  revenue: string;
-  genres: string;
-  production_countries: string;
+  release_date: string | null;
+  release_year: number | null;
+  popularity: number | null;
+  vote_average: number | null;
+  vote_count: number | null;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  runtime_minutes: number | null;
+  budget: number | null;
+  revenue: number | null;
+  collected_at: string;
 };
 
-// Type for the result returned after importing a movies CSV file.
-export type MovieImportResult = {
-  imported: number;
-  created: number;
-  updated: number;
+// Type for movie data accepted when creating or updating a database record.
+export type MovieInput = Omit<MovieRecord, 'release_year' | 'collected_at'> & {
+  collected_at?: string;
 };
