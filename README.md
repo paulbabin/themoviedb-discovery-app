@@ -60,6 +60,18 @@ npx tsx src/back-end/backend-cli.ts create-database --path ./data/ma-base.sqlite
 
 La commande initialise le schéma sans supprimer les données d'une base existante.
 
+## Import des films depuis un CSV
+
+Le module
+[`movies-importer.ts`](./src/back-end/database/movies-importer.ts) expose
+`importMoviesFromCsv(database, filePath)`. Il lit un fichier CSV contenant les
+colonnes de `data/movies.csv`, convertit les nombres et les valeurs vides, puis
+insère ou met à jour chaque film selon son identifiant.
+
+L'import renvoie le nombre de lignes traitées ainsi que les compteurs
+`created` et `updated`. Il est exécuté dans une transaction SQLite : une ligne
+invalide annule l'importation complète.
+
 ## API locale
 
 | Méthode | Route                 | Description                                                       |
