@@ -72,6 +72,18 @@ L'import renvoie le nombre de lignes traitées ainsi que les compteurs
 `created` et `updated`. Il est exécuté dans une transaction SQLite : une ligne
 invalide annule l'importation complète.
 
+## Mise à jour du catalogue depuis TMDB
+
+Le module
+[`movies-update-service.ts`](./src/back-end/database/movies-update-service.ts)
+expose `updateMoviesFromApi(database, options)`. Il récupère une page de films
+populaires depuis TMDB, charge leurs détails, puis met à jour les films, genres,
+pays de production et tables de liaison SQLite.
+
+Les options `language`, `page` et `region` permettent de contrôler la page TMDB
+à synchroniser. Le service renvoie les compteurs de films créés ou mis à jour,
+ainsi que le nombre de genres et de pays traités.
+
 ## Module de gestion des films
 
 Le module [`movies-repository.ts`](./src/back-end/database/movies-repository.ts)
