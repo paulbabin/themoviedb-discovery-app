@@ -60,6 +60,22 @@ npx tsx src/back-end/backend-cli.ts create-database --path ./data/ma-base.sqlite
 
 La commande initialise le schéma sans supprimer les données d'une base existante.
 
+## Module de gestion des films
+
+Le module [`movies-repository.ts`](./src/back-end/database/movies-repository.ts)
+gère les films stockés dans SQLite :
+
+- `findMovieById(database, id)` recherche un film et renvoie `undefined` s'il
+  n'existe pas ;
+- `listMovies(database)` renvoie tous les films triés par identifiant croissant ;
+- `createMovie(database, movie)` insère un film et renvoie la ligne persistée ;
+- `updateMovie(database, movie)` actualise un film existant et renvoie `true`
+  si une ligne a été modifiée, ou `false` si l'identifiant n'existe pas.
+
+La colonne `release_year` est générée par SQLite à partir de `release_date`.
+Lorsque `collected_at` n'est pas fourni lors d'une création ou d'une mise à
+jour, le module utilise la date et l'heure courantes au format ISO.
+
 ## API locale
 
 | Méthode | Route                 | Description                                                       |
