@@ -75,20 +75,80 @@ gère les films stockés dans SQLite :
 La colonne `release_year` est générée par SQLite à partir de `release_date`.
 Lorsque `collected_at` n'est pas fourni lors d'une création ou d'une mise à
 jour, le module utilise la date et l'heure courantes au format ISO.
+Pour importer ou actualiser les pays depuis le fichier d'exemple :
+
+```sh
+npx tsx src/back-end/backend-cli.ts add-countries ./data/countries.csv
+```
+
+Le chemin de la base peut être personnalisé avec `--path` :
+
+```sh
+npx tsx src/back-end/backend-cli.ts --path ./data/ma-base.sqlite add-countries ./data/countries.csv
+```
+
+Pour supprimer uniquement les pays qui ne sont associés à aucun film :
+
+```sh
+npx tsx src/back-end/backend-cli.ts clean-countries
+npx tsx src/back-end/backend-cli.ts --path ./data/ma-base.sqlite clean-countries
+```
+
+Pour importer ou mettre à jour les genres depuis le fichier [`data/genres.csv`](./data/genres.csv), utilisez :
+
+```sh
+npx tsx src/back-end/backend-cli.ts add-genres ./data/genres.csv
+```
+
+La synchronisation est idempotente : les genres existants sont mis à jour par identifiant
+et les nouveaux genres sont ajoutés sans doublon. Le chemin de la base peut être placé
+avant ou après la commande :
+
+```sh
+npx tsx src/back-end/backend-cli.ts --path ./data/ma-base.sqlite \
+  add-genres ./data/genres.csv
+```
+
+Les opérations de lecture et d'écriture sur les genres sont regroupées dans
+[`src/back-end/database/genre-repository.ts`](./src/back-end/database/genre-repository.ts).
+Le dépôt valide le CSV avant l'ouverture de la base et gère les fins de ligne LF/CRLF,
+le BOM UTF-8 ainsi que les champs CSV entre guillemets.
+
+Pour supprimer uniquement les genres qui ne sont associés à aucun film, utilisez :
+
+```sh
+npx tsx src/back-end/backend-cli.ts clean-genres
+npx tsx src/back-end/backend-cli.ts --path ./data/ma-base.sqlite clean-genres
+```
+
+Les commandes affichent le nombre de genres importés ou supprimés ainsi que le chemin de
+la base utilisée.
 
 ## API locale
 
-| Méthode | Route                 | Description                                                       |
-| ------- | --------------------- | ----------------------------------------------------------------- |
-| `GET`   | `/api/health`         | Vérifie que le serveur répond.                                    |
-| `GET`   | `/api/movies/popular` | Renvoie les films populaires.                                     |
-| `GET`   | `/api/movies/:id`     | Renvoie les détails du film correspondant à son identifiant TMDB. |
+| Méthode | Route                  | Description                                                       |
+| ------- | ---------------------- | ----------------------------------------------------------------- |
+| `GET`   | `/api/health`          | Vérifie que le serveur répond.                                    |
+| `GET`   | `/api/movies/popular`  | Renvoie les films populaires.                                     |
+| `GET`   | `/api/movies/:id`      | Renvoie les détails du film correspondant à son identifiant TMDB. |
+| `GET`   | `/api/discover/movies` | Renvoie une page de films pour une année de sortie principale.    |
 
 Les routes des films acceptent les paramètres `language`, `page` et `region`. Exemple :
 
 ```text
 /api/movies/popular?language=fr-FR&page=1&region=FR
 ```
+
+La route Discover exige une année sur quatre chiffres entre 1000 et 9999.
+Elle accepte aussi `language`, `page` et `region`, avec les valeurs par défaut
+`fr-FR`, `1` et `FR` :
+
+```text
+/api/discover/movies?year=2020&language=en-US&page=2&region=US
+```
+
+Chaque appel récupère uniquement la page demandée depuis TMDB, sans enrichir ni
+stocker les films.
 
 ## Vérifications
 
