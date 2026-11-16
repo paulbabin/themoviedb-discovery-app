@@ -71,6 +71,7 @@ insère ou met à jour chaque film selon son identifiant.
 L'import renvoie le nombre de lignes traitées ainsi que les compteurs
 `created` et `updated`. Il est exécuté dans une transaction SQLite : une ligne
 invalide annule l'importation complète.
+
 ## Module de gestion des films
 
 Le module [`movies-repository.ts`](./src/back-end/database/movies-repository.ts)
