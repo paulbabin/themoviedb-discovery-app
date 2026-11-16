@@ -70,6 +70,33 @@ export type ApiErrorResponse = {
   error: string;
 };
 
+// Type for a row read from the movies CSV file before conversion.
+export type MovieCsvRow = {
+  id: string;
+  title: string;
+  original_title: string;
+  original_language: string;
+  overview: string;
+  release_date: string;
+  popularity: string;
+  vote_average: string;
+  vote_count: string;
+  poster_path: string;
+  backdrop_path: string;
+  runtime: string;
+  budget: string;
+  revenue: string;
+  genres: string;
+  production_countries: string;
+};
+
+// Type for the result returned after importing a movies CSV file.
+export type MovieImportResult = {
+  imported: number;
+  created: number;
+  updated: number;
+};
+
 // Type for a movie persisted in the SQLite database.
 export type MovieRecord = {
   id: number;
