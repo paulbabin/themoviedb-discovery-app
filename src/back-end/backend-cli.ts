@@ -69,4 +69,40 @@ program
     }
   });
 
+program
+  .command('add-countries')
+  .argument('<csv-file>', 'path to the countries CSV file')
+  .description('Create and update production countries from a CSV file')
+  .option('-p, --path <path>', 'path to the SQLite database file')
+  .action((csvFile: string, options: { path?: string }, command: Command) => {
+    const countries = parseCountriesCsv(readFileSync(csvFile, 'utf8'));
+    const resolvedPath = databasePath(options.path, command);
+    const database = getDatabase(resolvedPath);
+    try {
+      const countryCount = upsertCountries(database, countries);
+      console.log(
+        `${countryCount} country/countries imported in ${resolve(resolvedPath)}`,
+      );
+    } finally {
+      database.close();
+    }
+  });
+
+program
+  .command('clean-countries')
+  .description('Remove countries that are not associated with a movie')
+  .option('-p, --path <path>', 'path to the SQLite database file')
+  .action((options: { path?: string }, command: Command) => {
+    const resolvedPath = databasePath(options.path, command);
+    const database = getDatabase(resolvedPath);
+    try {
+      const countryCount = deleteUnusedCountries(database);
+      console.log(
+        `${countryCount} country/countries removed from ${resolve(resolvedPath)}`,
+      );
+    } finally {
+      database.close();
+    }
+  });
+
 program.parse();
