@@ -62,6 +62,8 @@ dashboard disponibles sont :
 - `Dashboard/DashboardPage`, qui présente le tableau de bord sans widget ;
 - `Dashboard/Future widget states`, qui permet de visualiser les états
   `loading`, `empty`, `error` et `ready`.
+- `Dashboard/AverageMovieRatingWidget`, qui présente la note moyenne avec les
+  états nominal, chargement, absence de notes et erreur.
 
 Pour produire une version statique et vérifier que toutes les stories sont
 compilables :
