@@ -44,6 +44,32 @@ Les paramètres par défaut sont la langue `fr-FR`, la région `FR` et la premi�
 
 Le serveur Express écoute sur le port `3000`. Vite sert l'interface sur le port `5173` et transmet les requêtes `/api` au serveur Express.
 
+## Storybook
+
+Storybook permet de visualiser les pages et les futurs widgets du dashboard
+indépendamment de l'application et de l'API TMDB. Le jeton TMDB et la base
+SQLite ne sont donc pas nécessaires pour le lancer.
+
+Pour démarrer Storybook en mode développement :
+
+```sh
+npm run storybook
+```
+
+Ouvrez ensuite [http://localhost:6006](http://localhost:6006). Les stories du
+dashboard disponibles sont :
+
+- `Dashboard/DashboardPage`, qui présente le tableau de bord sans widget ;
+- `Dashboard/Future widget states`, qui permet de visualiser les états
+  `loading`, `empty`, `error` et `ready`.
+
+Pour produire une version statique et vérifier que toutes les stories sont
+compilables :
+
+```sh
+npm run build-storybook
+```
+
 ## Création de la base de données
 
 Après l'installation des dépendances, créez et initialisez la base SQLite avec le CLI du backend :
