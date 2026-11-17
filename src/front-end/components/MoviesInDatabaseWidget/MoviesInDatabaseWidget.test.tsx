@@ -9,7 +9,9 @@ afterEach(cleanup);
 describe('MoviesInDatabaseWidget', () => {
   it('renders the number of movies when the data is ready', () => {
     // Arrange and act
-    render(<MoviesInDatabaseWidget state="ready" count={42} />);
+    const { rerender } = render(
+      <MoviesInDatabaseWidget state="ready" count={42} />,
+    );
 
     // Assert: the widget exposes its title and count.
     expect(
@@ -19,6 +21,9 @@ describe('MoviesInDatabaseWidget', () => {
     expect(
       screen.getByRole('article', { name: 'Widget Films en base' }),
     ).toBeTruthy();
+
+    rerender(<MoviesInDatabaseWidget state="ready" count={1} />);
+    expect(screen.getByText('1 film disponible en base.')).toBeTruthy();
   });
 
   it('renders each non-ready state with its matching message', () => {
@@ -42,5 +47,10 @@ describe('MoviesInDatabaseWidget', () => {
       />,
     );
     expect(screen.getByText('Erreur de connexion à la base.')).toBeTruthy();
+
+    rerender(<MoviesInDatabaseWidget state="error" />);
+    expect(
+      screen.getByText('Les films en base ne sont pas disponibles.'),
+    ).toBeTruthy();
   });
 });
