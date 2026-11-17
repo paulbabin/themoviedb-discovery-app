@@ -62,6 +62,8 @@ dashboard disponibles sont :
 - `Dashboard/DashboardPage`, qui présente le tableau de bord sans widget ;
 - `Dashboard/Future widget states`, qui permet de visualiser les états
   `loading`, `empty`, `error` et `ready`.
+- `Dashboard/TopRatedMovieWidget`, qui présente le film le mieux noté dans les
+  états nominal, affiche absente, chargement, absence de film noté et erreur.
 
 Pour produire une version statique et vérifier que toutes les stories sont
 compilables :
