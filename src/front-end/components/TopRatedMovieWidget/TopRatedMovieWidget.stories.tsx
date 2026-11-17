@@ -17,7 +17,7 @@ const topRatedMovie: Movie = {
   title: 'The Highest Rated Movie',
   release_date: '2024-05-10',
   vote_average: 9.1,
-  poster_path: '/top-rated-poster.jpg',
+  poster_path: '/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg',
 } as Movie;
 
 export const Nominal: Story = {
