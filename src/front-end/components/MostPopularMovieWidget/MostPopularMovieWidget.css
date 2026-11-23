@@ -1,0 +1,106 @@
+.popular-movie-widget {
+  overflow: hidden;
+  width: 100%;
+  max-width: 720px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 12px 30px rgb(25 35 58 / 12%);
+}
+
+.popular-movie-widget--state {
+  min-height: 180px;
+  padding: 20px;
+}
+
+.popular-movie-widget__kicker {
+  margin: 0;
+  padding: 16px 18px 12px;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.popular-movie-widget--state .popular-movie-widget__kicker {
+  padding: 0 0 12px;
+}
+
+.popular-movie-widget__content {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 20px;
+  padding: 0 18px 18px;
+}
+
+.popular-movie-widget__poster {
+  width: 180px;
+  aspect-ratio: 2 / 3;
+  border-radius: 12px;
+  object-fit: cover;
+  background: #dbe5f4;
+}
+
+.popular-movie-widget__poster--placeholder {
+  background: linear-gradient(135deg, #cdd9eb, #e7edf7);
+}
+
+.popular-movie-widget__copy {
+  min-width: 0;
+  align-self: end;
+}
+
+.popular-movie-widget h2 {
+  overflow-wrap: anywhere;
+  margin: 0 0 16px;
+  color: var(--ink-strong);
+  font-size: clamp(1.35rem, 4vw, 2.25rem);
+  line-height: 1.08;
+}
+
+.popular-movie-widget__meta {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.popular-movie-widget__meta div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+}
+
+.popular-movie-widget__meta dt,
+.popular-movie-widget__meta dd {
+  margin: 0;
+}
+
+.popular-movie-widget__meta dt {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.popular-movie-widget__meta dd {
+  color: var(--ink-strong);
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+@media (max-width: 520px) {
+  .popular-movie-widget__content {
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .popular-movie-widget__poster {
+    width: 112px;
+  }
+
+  .popular-movie-widget h2 {
+    font-size: 1.25rem;
+  }
+}
