@@ -154,6 +154,11 @@ export type BestRatedGenreWidgetData = {
   average_simple_rating: number | null;
 };
 
+export type BestWeightedRatedGenreWidgetData = {
+  genre_name: string | null;
+  average_weighted_rating: number | null;
+};
+
 export type MovieProfitabilityWidgetData = Pick<
   MovieRecord,
   'title' | 'release_year' | 'poster_path'
