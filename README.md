@@ -60,6 +60,10 @@ Ouvrez ensuite [http://localhost:6006](http://localhost:6006). Les stories du
 dashboard disponibles sont :
 
 - `Dashboard/DashboardPage`, qui présente le tableau de bord sans widget ;
+- `Dashboard/Future widget states`, qui permet de visualiser les états
+  `loading`, `empty`, `error` et `ready`.
+- `Dashboard/AverageMovieDurationWidget`, qui présente la durée moyenne dans
+  les états nominal, chargement, absence de données et erreur.
 - `Dashboard/MoviesInDatabaseWidget`, qui présente le widget « Films en base »
   dans les états `loading`, `empty`, `error` et `ready`.
 
