@@ -1,0 +1,53 @@
+.average-movie-rating-widget {
+  width: 100%;
+  max-width: 360px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 8px 18px rgb(41 69 99 / 9%);
+}
+
+.average-movie-rating-widget__header {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.average-movie-rating-widget__eyebrow {
+  margin: 0 0 6px;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.average-movie-rating-widget h2 {
+  margin: 0;
+  color: var(--heading);
+  font-size: 1.35rem;
+}
+
+.average-movie-rating-widget__content {
+  padding: 20px;
+}
+
+.average-movie-rating-widget__content strong {
+  display: block;
+  color: var(--heading);
+  font-size: clamp(1.7rem, 8vw, 2.2rem);
+  overflow-wrap: anywhere;
+}
+
+.average-movie-rating-widget__content p {
+  margin: 6px 0 0;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+@media (max-width: 420px) {
+  .average-movie-rating-widget__header,
+  .average-movie-rating-widget__content {
+    padding: 16px;
+  }
+}
