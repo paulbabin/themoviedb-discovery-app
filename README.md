@@ -64,6 +64,8 @@ dashboard disponibles sont :
   `loading`, `empty`, `error` et `ready` ;
 - `Dashboard/Genres représentés`, qui montre le total des genres distincts
   ainsi que les états zéro, valeur inconnue, chargement et erreur.
+- `Dashboard/Genre dominant`, qui montre le genre le plus représenté et son
+  effectif parmi les films.
 
 ### Contrat du widget « Genres représentés »
 
@@ -73,6 +75,15 @@ distincts déjà calculé (`number`) ou `null` si le nombre est inconnu. Le widg
 affiche ce total avec son unité ; il ne compte pas les associations entre films
 et genres. Une valeur de zéro est un résultat valide et distinct d'une valeur
 inconnue.
+
+### Contrat du widget « Genre dominant »
+
+Le composant reçoit un objet `DominantGenreWidgetData` défini dans
+`MoviesTypes.ts`, avec `genre_name` et `movie_count`, tous deux éventuellement
+`null` lorsqu'ils sont inconnus. Le genre et son effectif sont calculés en
+amont ; le widget affiche le résultat reçu et ne recompte pas les associations
+film-genre. Un nom ou un effectif absent est indiqué comme inconnu, tandis que
+l'absence de genre connu utilise l'état `empty`.
 
 - `Dashboard/Film le plus rentable` et `Dashboard/Film le moins rentable`,
   qui montrent les cartes et leurs états.
