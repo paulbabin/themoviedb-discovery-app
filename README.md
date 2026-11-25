@@ -62,6 +62,18 @@ dashboard disponibles sont :
 - `Dashboard/DashboardPage`, qui présente le tableau de bord sans widget ;
 - `Dashboard/Future widget states`, qui permet de visualiser les états
   `loading`, `empty`, `error` et `ready` ;
+- `Dashboard/Genres représentés`, qui montre le total des genres distincts
+  ainsi que les états zéro, valeur inconnue, chargement et erreur.
+
+### Contrat du widget « Genres représentés »
+
+Le composant reçoit un objet `GenresRepresentedWidgetData` défini dans
+`MoviesTypes.ts`. Sa propriété `genre_count` contient le nombre de genres
+distincts déjà calculé (`number`) ou `null` si le nombre est inconnu. Le widget
+affiche ce total avec son unité ; il ne compte pas les associations entre films
+et genres. Une valeur de zéro est un résultat valide et distinct d'une valeur
+inconnue.
+
 - `Dashboard/Film le plus rentable` et `Dashboard/Film le moins rentable`,
   qui montrent les cartes et leurs états.
 
@@ -121,6 +133,18 @@ Un film est éligible uniquement si son budget est strictement supérieur à zé
 et ses recettes sont supérieures ou égales à zéro. Un budget ou des recettes
 manquants rendent le film inéligible. La carte ne met pas en œuvre ces règles ;
 elles appartiennent à la future sélection/calcul des données.
+
+- `Dashboard/Genres représentés`, qui montre le total des genres distincts
+  ainsi que les états zéro, valeur inconnue, chargement et erreur.
+
+### Contrat du widget « Genres représentés »
+
+Le composant reçoit un objet `GenresRepresentedWidgetData` défini dans
+`MoviesTypes.ts`. Sa propriété `genre_count` contient le nombre de genres
+distincts déjà calculé (`number`) ou `null` si le nombre est inconnu. Le widget
+affiche ce total avec son unité ; il ne compte pas les associations entre films
+et genres. Une valeur de zéro est un résultat valide et distinct d'une valeur
+inconnue.
 
 Pour produire une version statique et vérifier que toutes les stories sont
 compilables :

@@ -140,6 +140,10 @@ export type MovieRecord = {
   collected_at: string;
 };
 
+export type GenresRepresentedWidgetData = {
+  genre_count: number | null;
+};
+
 export type MovieProfitabilityWidgetData = Pick<
   MovieRecord,
   'title' | 'release_year' | 'poster_path'
