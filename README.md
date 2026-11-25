@@ -83,7 +83,8 @@ Un film est éligible uniquement si son budget est strictement supérieur à zé
 et ses recettes sont supérieures ou égales à zéro. Un budget ou des recettes
 manquants rendent le film inéligible. La carte ne met pas en œuvre ces règles ;
 elles appartiennent à la future sélection/calcul des données.
-  `loading`, `empty`, `error` et `ready`.
+`loading`, `empty`, `error` et `ready`.
+
 - `Dashboard/TopRatedMovieWidget`, qui présente le film le mieux noté dans les
   états nominal, affiche absente, chargement, absence de film noté et erreur.
 - `Dashboard/MostRepresentedCountryWidget`, qui présente le pays le plus
