@@ -62,18 +62,21 @@ dashboard disponibles sont :
 - `Dashboard/DashboardPage`, qui présente le tableau de bord sans widget ;
 - `Dashboard/Future widget states`, qui permet de visualiser les états
   `loading`, `empty`, `error` et `ready` ;
-- `Dashboard/Film le plus rentable`, qui montre la carte et ses états.
+- `Dashboard/Film le plus rentable` et `Dashboard/Film le moins rentable`,
+  qui montrent les cartes et leurs états.
 
-### Contrat du widget « Film le plus rentable »
+### Contrat des widgets de rentabilité
 
-Le composant reçoit un candidat déjà déterminé avec son `title`,
-`release_year`, `poster_path` et `roi_percentage` (`number | null`). Il ne
-calcule pas le ROI et ne classe pas les films. `null` signifie que la valeur
-n'est pas connue et s'affiche comme « Non renseigné », jamais comme zéro. Les
-états `loading`, `empty` (aucun film éligible) et `error` sont fournis
-explicitement.
+Chaque composant reçoit un candidat déjà déterminé avec son `title`,
+`release_year`, `poster_path` et `roi_percentage` (`number | null`), selon le
+type `MovieProfitabilityWidgetData` de `MoviesTypes.ts`. Il ne calcule pas le
+ROI et ne classe pas les films. `null` signifie que le ROI n'est pas connu et
+s'affiche comme « Non renseigné », jamais comme zéro ; `0` est une valeur
+valide affichée `0,00 %`. Les états `loading`, `empty` (aucun film éligible) et
+`error` sont fournis explicitement. Les deux widgets appliquent le même
+formatage et conservent le signe d'un ROI négatif.
 
-La règle métier validée pour le calcul en amont est :
+La règle métier validée pour le calcul en amont des deux widgets est :
 
 ```text
 ROI (%) = ((recettes - budget) / budget) × 100
