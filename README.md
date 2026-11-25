@@ -62,6 +62,8 @@ dashboard disponibles sont :
 - `Dashboard/DashboardPage`, qui présente le tableau de bord sans widget ;
 - `Dashboard/Future widget states`, qui permet de visualiser les états
   `loading`, `empty`, `error` et `ready`.
+- `Dashboard/TopRatedMovieWidget`, qui présente le film le mieux noté dans les
+  états nominal, affiche absente, chargement, absence de film noté et erreur.
 - `Dashboard/MostRepresentedCountryWidget`, qui présente le pays le plus
   représenté dans les états nominal, nom long, chargement, absence de pays et
   erreur.
