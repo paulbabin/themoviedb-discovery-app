@@ -149,6 +149,11 @@ export type DominantGenreWidgetData = {
   movie_count: number | null;
 };
 
+export type BestRatedGenreWidgetData = {
+  genre_name: string | null;
+  average_simple_rating: number | null;
+};
+
 export type MovieProfitabilityWidgetData = Pick<
   MovieRecord,
   'title' | 'release_year' | 'poster_path'
