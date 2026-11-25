@@ -155,10 +155,6 @@ export type MostProfitableMovieWidgetData = MovieProfitabilityWidgetData;
 
 export type LeastProfitableMovieWidgetData = MovieProfitabilityWidgetData;
 
-export type GenresRepresentedWidgetData = {
-  genre_count: number | null;
-};
-
 // Type for movie data accepted when creating or updating a database record.
 export type MovieInput = Omit<MovieRecord, 'release_year' | 'collected_at'> & {
   collected_at?: string;
