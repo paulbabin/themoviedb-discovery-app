@@ -63,9 +63,11 @@ dashboard disponibles sont :
 - `Dashboard/Future widget states`, qui permet de visualiser les états
   `loading`, `empty`, `error` et `ready` ;
 - `Dashboard/Genres représentés`, qui montre le total des genres distincts
-  ainsi que les états zéro, valeur inconnue, chargement et erreur.
+  ainsi que les états zéro, valeur inconnue, chargement et erreur ;
 - `Dashboard/Genre dominant`, qui montre le genre le plus représenté et son
-  effectif parmi les films.
+  effectif parmi les films ;
+- `Dashboard/BestRatedGenreWidget`, qui montre le genre ayant la meilleure
+  moyenne simple et ses états.
 
 ### Contrat du widget « Genres représentés »
 
@@ -84,6 +86,16 @@ Le composant reçoit un objet `DominantGenreWidgetData` défini dans
 amont ; le widget affiche le résultat reçu et ne recompte pas les associations
 film-genre. Un nom ou un effectif absent est indiqué comme inconnu, tandis que
 l'absence de genre connu utilise l'état `empty`.
+
+### Contrat du widget « Meilleure note par genre »
+
+Le composant reçoit un objet `BestRatedGenreWidgetData` défini dans
+`MoviesTypes.ts`, avec `genre_name` et `average_simple_rating`, éventuellement
+`null` lorsqu'ils sont inconnus. La moyenne simple des notes valides est
+calculée en amont et le composant ne la recalcule pas. Elle est distincte d'une
+moyenne pondérée ; un genre sans note valide utilise l'état `empty` et n'est
+pas affiché comme ayant une note de zéro. Une valeur manquante dans un résultat
+`ready` est affichée comme indisponible.
 
 - `Dashboard/Film le plus rentable` et `Dashboard/Film le moins rentable`,
   qui montrent les cartes et leurs états.
