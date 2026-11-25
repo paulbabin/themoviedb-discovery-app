@@ -61,7 +61,30 @@ dashboard disponibles sont :
 
 - `Dashboard/DashboardPage`, qui présente le tableau de bord sans widget ;
 - `Dashboard/Future widget states`, qui permet de visualiser les états
-  `loading`, `empty`, `error` et `ready`.
+  `loading`, `empty`, `error` et `ready` ;
+- `Dashboard/Film le plus rentable`, qui montre la carte et ses états.
+
+### Contrat du widget « Film le plus rentable »
+
+Le composant reçoit un candidat déjà déterminé avec son `title`,
+`release_year`, `poster_path` et `roi_percentage` (`number | null`). Il ne
+calcule pas le ROI et ne classe pas les films. `null` signifie que la valeur
+n'est pas connue et s'affiche comme « Non renseigné », jamais comme zéro. Les
+états `loading`, `empty` (aucun film éligible) et `error` sont fournis
+explicitement.
+
+La règle métier validée pour le calcul en amont est :
+
+```text
+ROI (%) = ((recettes - budget) / budget) × 100
+```
+
+Un film est éligible uniquement si son budget est strictement supérieur à zéro
+et ses recettes sont supérieures ou égales à zéro. Un budget ou des recettes
+manquants rendent le film inéligible. La carte ne met pas en œuvre ces règles ;
+elles appartiennent à la future sélection/calcul des données.
+`loading`, `empty`, `error` et `ready`.
+
 - `Dashboard/TopRatedMovieWidget`, qui présente le film le mieux noté dans les
   états nominal, affiche absente, chargement, absence de film noté et erreur.
 - `Dashboard/MostRepresentedCountryWidget`, qui présente le pays le plus
@@ -73,6 +96,28 @@ dashboard disponibles sont :
   les états nominal, chargement, absence de données et erreur.
 - `Dashboard/MoviesInDatabaseWidget`, qui présente le widget « Films en base »
   dans les états `loading`, `empty`, `error` et `ready`.
+  `loading`, `empty`, `error` et `ready` ;
+- `Dashboard/Film le plus rentable`, qui montre la carte et ses états.
+
+### Contrat du widget « Film le plus rentable »
+
+Le composant reçoit un candidat déjà déterminé avec son `title`,
+`release_year`, `poster_path` et `roi_percentage` (`number | null`). Il ne
+calcule pas le ROI et ne classe pas les films. `null` signifie que la valeur
+n'est pas connue et s'affiche comme « Non renseigné », jamais comme zéro. Les
+états `loading`, `empty` (aucun film éligible) et `error` sont fournis
+explicitement.
+
+La règle métier validée pour le calcul en amont est :
+
+```text
+ROI (%) = ((recettes - budget) / budget) × 100
+```
+
+Un film est éligible uniquement si son budget est strictement supérieur à zéro
+et ses recettes sont supérieures ou égales à zéro. Un budget ou des recettes
+manquants rendent le film inéligible. La carte ne met pas en œuvre ces règles ;
+elles appartiennent à la future sélection/calcul des données.
 
 Pour produire une version statique et vérifier que toutes les stories sont
 compilables :
