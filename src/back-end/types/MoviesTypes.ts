@@ -144,6 +144,17 @@ export type GenresRepresentedWidgetData = {
   genre_count: number | null;
 };
 
+export type MovieProfitabilityWidgetData = Pick<
+  MovieRecord,
+  'title' | 'release_year' | 'poster_path'
+> & {
+  roi_percentage: number | null;
+};
+
+export type MostProfitableMovieWidgetData = MovieProfitabilityWidgetData;
+
+export type LeastProfitableMovieWidgetData = MovieProfitabilityWidgetData;
+
 // Type for movie data accepted when creating or updating a database record.
 export type MovieInput = Omit<MovieRecord, 'release_year' | 'collected_at'> & {
   collected_at?: string;
