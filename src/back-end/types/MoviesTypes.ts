@@ -140,6 +140,13 @@ export type MovieRecord = {
   collected_at: string;
 };
 
+export type MostProfitableMovieWidgetData = Pick<
+  MovieRecord,
+  'title' | 'release_year' | 'poster_path'
+> & {
+  roi_percentage: number | null;
+};
+
 // Type for movie data accepted when creating or updating a database record.
 export type MovieInput = Omit<MovieRecord, 'release_year' | 'collected_at'> & {
   collected_at?: string;
