@@ -67,7 +67,9 @@ dashboard disponibles sont :
 - `Dashboard/Genre dominant`, qui montre le genre le plus représenté et son
   effectif parmi les films ;
 - `Dashboard/BestRatedGenreWidget`, qui montre le genre ayant la meilleure
-  moyenne simple et ses états.
+  moyenne simple et ses états ;
+- `Dashboard/BestWeightedRatedGenreWidget`, qui montre le genre ayant la
+  meilleure note pondérée et ses états.
 
 ### Contrat du widget « Genres représentés »
 
@@ -96,6 +98,28 @@ calculée en amont et le composant ne la recalcule pas. Elle est distincte d'une
 moyenne pondérée ; un genre sans note valide utilise l'état `empty` et n'est
 pas affiché comme ayant une note de zéro. Une valeur manquante dans un résultat
 `ready` est affichée comme indisponible.
+
+### Contrat du widget « Meilleure note pondérée par genre »
+
+Le composant reçoit un objet `BestWeightedRatedGenreWidgetData` défini dans
+`MoviesTypes.ts`, avec `genre_name` et `average_weighted_rating`, éventuellement
+`null` lorsqu'ils sont inconnus. La note pondérée est calculée en amont et le
+composant affiche la valeur fournie sans lui appliquer une pondération. La
+formule validée pour le calcul en amont est :
+
+```text
+score = (v / (v + m)) × R + (m / (v + m)) × C
+```
+
+`R` est la moyenne simple des notes valides du genre, `v` le nombre de films de
+ce genre ayant une note valide, `C` la moyenne simple des notes valides de tout
+le catalogue et `m = 50` le poids de référence (équivalent à 50 votes) dans la
+pondération. `m` n'est pas un seuil minimal d'éligibilité. Un genre est
+admissible uniquement si son nom est connu, `v > 0`, et si `R` et `C` peuvent
+être calculés ; les genres non admissibles ne participent pas à la sélection.
+Ces règles ne sont pas exécutées par le composant. Un genre sans note valide
+utilise l'état `empty`, et une valeur absente dans un résultat `ready` est
+affichée comme indisponible plutôt que comme zéro.
 
 - `Dashboard/Film le plus rentable` et `Dashboard/Film le moins rentable`,
   qui montrent les cartes et leurs états.
