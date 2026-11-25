@@ -64,6 +64,10 @@ dashboard disponibles sont :
   `loading`, `empty`, `error` et `ready`.
 - `Dashboard/AverageMovieRatingWidget`, qui présente la note moyenne avec les
   états nominal, chargement, absence de notes et erreur.
+- `Dashboard/AverageMovieDurationWidget`, qui présente la durée moyenne dans
+  les états nominal, chargement, absence de données et erreur.
+- `Dashboard/MoviesInDatabaseWidget`, qui présente le widget « Films en base »
+  dans les états `loading`, `empty`, `error` et `ready`.
 
 Pour produire une version statique et vérifier que toutes les stories sont
 compilables :
